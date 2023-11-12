@@ -1,25 +1,12 @@
 const express = require("express");
-// Dummy data for Italian restaurant dishes
-const italianDishes = require("./italianDishes");
 const connectDB = require("./database");
-// Create an app by calling express()
+const Dish = require("./models/Dish");
 const app = express();
+const PORT = 8000; // Choose a port of your choice
+
 connectDB();
 
-// Parsing the request.body into json format
 app.use(express.json());
-
-// Define a route for all /dishes
-app.get("/dishes", (req, res) => {
-  res.json(italianDishes); // Return the Italian dishes as JSON
-});
-
-// Define a route for one /dishes
-app.get("/dishes/:id", (req, res) => {
-  const { id } = req.params;
-  const foundDish = italianDishes.find((dish) => dish.id === Number(id));
-  res.json(foundDish); // Return the Italian dishes as JSON
-});
 
 // Create a middleware for posting a dish
 const postDishMiddleware = (req, res, next) => {
@@ -31,45 +18,88 @@ const postDishMiddleware = (req, res, next) => {
   }
 };
 
-// Create a middleware for creating a dish
-app.post("/dishes", postDishMiddleware, (req, res) => {
-  const newDishData = req.body;
-  const newDish = {
-    id: italianDishes[italianDishes.length - 1].id + 1,
-    name: newDishData.name,
-    description: newDishData.description,
-    image: newDishData.image,
-    price: newDishData.price,
-  };
-  // Add the new dish to your menu (e.g., an array of dishes)
-  // Send a response with the newly created dish
-  res.json(newDish);
+//  GET all dishes
+app.get("/dishes", async (req, res) => {
+  try {
+    const dishes = await Dish.find();
+    return res.status(200).json({ dishes }); // Return the Italian dishes as JSON
+  } catch (error) {
+    res.status(500).json({ message: `Internal Server Error: ${error}` });
+  }
 });
 
-// Create a middleware for deleting a dish
-app.delete("/dishes/:id", (req, res) => {
-  const dishId = req.params.id;
-  const dishIndex = italianDishes.findIndex((dish) => dish.id === +dishId);
-  if (dishIndex !== -1) {
-    italianDishes.splice(dishIndex, 1);
-    res.status(204).end(); // Respond with a 204 No Content status code
-  } else {
-    res.status(404).json({ error: "Dish not found" }); // Respond with a 404 Not Found status code and an error message
+// GET one dish based on certain condition
+app.get("/dishes/:dishId", async (req, res) => {
+  try {
+    // Destruct the id from the url params
+    const { dishId } = req.params;
+
+    // Use findById() to get the dish based on given id
+    const foundDish = await Dish.findById(dishId);
+
+    return res.status(200).json(foundDish);
+  } catch (error) {
+    res.status(500).json({ message: `Internal Server Error: ${error}` });
+  }
+});
+
+// POST a dish
+app.post("/dishes", postDishMiddleware, async (req, res) => {
+  try {
+    // Create a new dish using the create() method
+    const newDish = await Dish.create(req.body);
+
+    // Send a response with the newly created dish
+    res.status(201).json(newDish);
+  } catch (error) {
+    res.status(500).json({ message: `Internal Server Error: ${error}` });
+  }
+});
+
+// DELETE a dish
+app.delete("/dishes/:dishId", async (req, res) => {
+  try {
+    const { dishId } = req.params;
+
+    // use the .findByIdAndDelete() method to search for the dish that its id matches the given id and then delete it
+    const foundDish = await Dish.findByIdAndDelete(dishId);
+
+    // Set a condition to check whether the dish exists or not
+    if (!foundDish)
+      return res.status(400).json({
+        message: `Oops, it seems like the dish you're looking for is not there`,
+      });
+    else {
+      return res.status(204).end();
+    }
+  } catch (error) {
+    res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
 });
 
 // Create a middleware for updating a dish
-app.put("/dishes/:id", (req, res) => {
-  const dishId = req.params.id;
-  const updatedDishData = req.body;
-  // Implement the code to update the dish in the array
-  const index = italianDishes.findIndex((dish) => dish.id === Number(dishId));
-  if (index !== -1) {
-    // Update the dish with the new data
-    italianDishes[index] = { ...italianDishes[index], ...updatedDishData };
-    res.json(italianDishes[index]); // Respond with the updated dish
-  } else {
-    res.status(404).json({ error: "Dish not found" }); // Respond with a 404 Not Found status code and an error message
+app.put("/dishes/:dishId", async (req, res) => {
+  try {
+    const { dishId } = req.params;
+
+    // the changes you wanna make on the dish
+    const updatedDishData = req.body;
+
+    // use the .findByIdAndUpdate() method to search for the dish that its id matches the given id and then update it
+    const foundDish = await Dish.findByIdAndUpdate(dishId, updatedDishData, {
+      new: true,
+    });
+
+    // Set a condition to check whether the dish exists or not
+    if (!foundDish)
+      return res.status(400).json({
+        message: `Oops, it seems like the dish you're looking for is not there`,
+      });
+    else {
+      return res.status(200).json({ UpdatedDish: foundDish });
+    }
+  } catch (error) {
+    res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
 });
 
@@ -79,7 +109,6 @@ app.use((req, res, next) => {
 });
 
 // Start the Express server
-const port = 8000; // Choose a port of your choice
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
