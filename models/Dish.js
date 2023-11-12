@@ -6,6 +6,12 @@ const dishSchema = new Schema({
   description: String,
   price: Number,
   image: String,
+  categories: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+    },
+  ],
 });
 
 const Dish = model("Dish", dishSchema);
