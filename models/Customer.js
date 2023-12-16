@@ -11,10 +11,10 @@ const customerSchema = new Schema({
     required: true,
     unique: true,
   },
-  membership: { type: boolean, default: false },
-  civilId: {
+  membership: { type: Boolean, default: false },
+  membershipCard: {
     type: Schema.Types.ObjectId,
-    ref: "CivilId",
+    ref: "MembershipCard",
     unique: true,
   },
 });
