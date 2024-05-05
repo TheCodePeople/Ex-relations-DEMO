@@ -44,10 +44,6 @@ router.post("/", async (req, res) => {
       },
       { new: true }
     );
-    console.log(
-      "🚀 ~ file: membershipCard.routes.js:41 ~ router.post ~ foundCustomer:",
-      foundCustomer
-    );
 
     // Send a response with the newly created membershipCard
     res.status(201).json(newMembershipCard);

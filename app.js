@@ -1,11 +1,18 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require("express");
 const connectDB = require("./database");
-const Dish = require("./models/Dish");
+const errorHandling = require("./middlewares/errorHandling");
+
+// Routes
 const italianDishesRoutes = require("./dishes/italianDishes.routes");
 const customerRoutes = require("./customers/customer.routes");
 const categoryRoutes = require("./categories/category.routes");
 const membershipCardRoutes = require("./membershipCards/membershipCard.routes");
 const restaurantRoutes = require("./restaurants/restaurants.routes");
+const notFoundError = require("./middlewares/notFoundError");
+
 const app = express();
 const PORT = 8000; // Choose a port of your choice
 
@@ -29,9 +36,9 @@ app.use("/membershipCards", membershipCardRoutes);
 app.use("/restaurants", restaurantRoutes);
 
 // Global 404 Middleware: This should be placed at the end of your middleware and route definitions.
-app.use((req, res, next) => {
-  res.status(404).send("Page not found");
-});
+app.use("*", notFoundError);
+
+app.use(errorHandling);
 
 // Start the Express server
 app.listen(PORT, () => {
