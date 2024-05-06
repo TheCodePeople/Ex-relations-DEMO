@@ -5,10 +5,16 @@ const dishSchema = new Schema({
   description: String,
   price: Number,
   image: String,
+  restaurant: {
+    type: Schema.Types.ObjectId,
+    ref: "Restaurant",
+    unique: true,
+  },
   categories: [
     {
       type: Schema.Types.ObjectId,
       ref: "Category",
+      unique: true,
     },
   ],
 });
