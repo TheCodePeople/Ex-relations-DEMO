@@ -1,6 +1,5 @@
 const express = require("express");
 const Customer = require("../models/Customer");
-const MembershipCard = require("../models/MembershipCard");
 const router = express.Router();
 
 //  GET all customers
@@ -62,7 +61,7 @@ router.delete("/:customerId", async (req, res) => {
   }
 });
 
-// Create a middleware for updating a customer
+// PUT (update) a customer
 router.put("/:customerId", async (req, res) => {
   try {
     const { customerId } = req.params;

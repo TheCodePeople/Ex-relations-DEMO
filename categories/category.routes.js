@@ -1,19 +1,18 @@
 const express = require("express");
 const Category = require("../models/Category");
-const Restaurant = require("../models/Restaurant");
 const router = express.Router();
 
 //  GET all categories
 router.get("/", async (req, res) => {
   try {
     const categories = await Category.find();
-    return res.status(200).json({ categories }); // Return the Italian categories as JSON
+    return res.status(200).json({ categories });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
 });
 
-// GET one category based on certain condition
+// GET single category
 router.get("/:categoryId", async (req, res) => {
   try {
     // Destruct the id from the url params
@@ -33,8 +32,6 @@ router.post("/", async (req, res) => {
   try {
     // Create a new category using the create() method
     const newCategory = await Category.create(req.body);
-
-    // TODO: Update restaurant by pushing the new created category
 
     // Send a response with the newly created category
     res.status(201).json(newCategory);
@@ -64,7 +61,7 @@ router.delete("/:categoryId", async (req, res) => {
   }
 });
 
-// Create a middleware for updating a category
+// PUT a category
 router.put("/:categoryId", async (req, res) => {
   try {
     const { categoryId } = req.params;

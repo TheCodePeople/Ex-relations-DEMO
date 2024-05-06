@@ -1,15 +1,17 @@
 const { Schema, model } = require("mongoose");
 
-// Membership Schema
-const membershipSchema = new Schema({
-  code: {
+const ReviewSchema = new Schema({
+  title: {
     type: String,
     required: true,
-    unique: true,
   },
-  points: {
+  text: {
+    type: String,
+    required: true,
+  },
+  rating: {
     type: Number,
-    default: 1,
+    required: true,
   },
   customer: {
     type: Schema.Types.ObjectId,
@@ -23,5 +25,5 @@ const membershipSchema = new Schema({
   },
 });
 
-const MembershipCard = model("MembershipCard", membershipSchema);
-module.exports = MembershipCard;
+const Review = model("Review", ReviewSchema);
+module.exports = Review;

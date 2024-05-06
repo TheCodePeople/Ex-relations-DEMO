@@ -61,7 +61,7 @@ router.delete("/:restaurantId", async (req, res) => {
   }
 });
 
-// Create a middleware for updating a restaurant
+// PUT (Update) a restaurant
 router.put("/:restaurantId", async (req, res) => {
   try {
     const { restaurantId } = req.params;

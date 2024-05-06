@@ -1,7 +1,8 @@
 const express = require("express");
 const Dish = require("../models/Dish");
-const Category = require("../models/Category");
 const router = express.Router();
+
+//TODO: Create a route to find dishes based on their categories
 
 // Create a middleware for posting a dish
 const postDishMiddleware = (req, res, next) => {
@@ -14,7 +15,7 @@ const postDishMiddleware = (req, res, next) => {
 };
 
 //  GET all dishes
-router.get("/dishes", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const dishes = await Dish.find();
     return res.status(200).json({ dishes }); // Return the Italian dishes as JSON
@@ -23,8 +24,8 @@ router.get("/dishes", async (req, res) => {
   }
 });
 
-// GET one dish based on certain condition
-router.get("/dishes/:dishId", async (req, res) => {
+// GET one dish based on dish id
+router.get("/:dishId", async (req, res) => {
   try {
     // Destruct the id from the url params
     const { dishId } = req.params;
@@ -39,12 +40,10 @@ router.get("/dishes/:dishId", async (req, res) => {
 });
 
 // POST a dish
-router.post("/dishes", postDishMiddleware, async (req, res) => {
+router.post("/", postDishMiddleware, async (req, res) => {
   try {
     // Create a new dish using the create() method
     const newDish = await Dish.create(req.body);
-
-    // TODO: Update category by pushing the new dishes to corresponding categories
 
     // Send a response with the newly created dish
     res.status(201).json(newDish);
@@ -54,7 +53,7 @@ router.post("/dishes", postDishMiddleware, async (req, res) => {
 });
 
 // DELETE a dish
-router.delete("/dishes/:dishId", async (req, res) => {
+router.delete("/:dishId", async (req, res) => {
   try {
     const { dishId } = req.params;
 
@@ -74,8 +73,8 @@ router.delete("/dishes/:dishId", async (req, res) => {
   }
 });
 
-// Create a middleware for updating a dish
-router.put("/dishes/:dishId", async (req, res) => {
+// Update (PUT) a dish
+router.put("/:dishId", async (req, res) => {
   try {
     const { dishId } = req.params;
 

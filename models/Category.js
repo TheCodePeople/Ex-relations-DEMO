@@ -6,12 +6,6 @@ const categorySchema = new Schema({
     type: String,
     required: true,
   },
-  dishes: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Dish",
-    },
-  ],
 });
 
 const Category = model("Category", categorySchema);

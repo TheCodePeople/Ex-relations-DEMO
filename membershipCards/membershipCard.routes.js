@@ -1,13 +1,12 @@
 const express = require("express");
 const MembershipCard = require("../models/MembershipCard");
-const Customer = require("../models/Customer");
 const router = express.Router();
 
 //  GET all membershipCards
 router.get("/", async (req, res) => {
   try {
     const membershipCards = await MembershipCard.find();
-    return res.status(200).json({ membershipCards }); // Return the Italian membershipCards as JSON
+    return res.status(200).json({ membershipCards });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
@@ -20,6 +19,7 @@ router.get("/:membershipCardId", async (req, res) => {
     const { membershipCardId } = req.params;
 
     // Use findById() to get the membershipCard based on given id
+
     const foundMembershipCard = await MembershipCard.findById(membershipCardId);
 
     return res.status(200).json(foundMembershipCard);
@@ -33,17 +33,6 @@ router.post("/", async (req, res) => {
   try {
     // Create a new membershipCard using the create() method
     const newMembershipCard = await MembershipCard.create(req.body);
-
-    // TODO: Update category by pushing the new membership to corresponding customer
-
-    const foundCustomer = await Customer.findByIdAndUpdate(
-      customerId,
-      {
-        $push: { membershipCard: newMembershipCard },
-        membership: true,
-      },
-      { new: true }
-    );
 
     // Send a response with the newly created membershipCard
     res.status(201).json(newMembershipCard);

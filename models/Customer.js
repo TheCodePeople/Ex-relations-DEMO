@@ -11,12 +11,6 @@ const customerSchema = new Schema({
     required: true,
     unique: true,
   },
-  membership: { type: Boolean, default: false },
-  membershipCard: {
-    type: Schema.Types.ObjectId,
-    ref: "MembershipCard",
-    unique: true,
-  },
 });
 
 const Customer = model("Customer", customerSchema);
