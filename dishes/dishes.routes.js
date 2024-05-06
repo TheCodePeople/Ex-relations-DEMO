@@ -17,8 +17,24 @@ const postDishMiddleware = (req, res, next) => {
 //  GET all dishes
 router.get("/", async (req, res) => {
   try {
-    const dishes = await Dish.find();
-    return res.status(200).json({ dishes }); // Return the Italian dishes as JSON
+    const dishes = await Dish.find()
+      .populate("categories", "name")
+      .populate("restaurant", "name");
+    return res.status(200).json({ dishes });
+  } catch (error) {
+    res.status(500).json({ message: `Internal Server Error: ${error}` });
+  }
+});
+
+router.post("/category", async (req, res) => {
+  try {
+    const { categoryIds } = req.body;
+    const dishes = await Dish.find()
+      .where("categories")
+      .all(categoryIds)
+      .populate(["categories", "restaurant"]);
+
+    return res.status(200).json({ dishes });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
@@ -31,7 +47,10 @@ router.get("/:dishId", async (req, res) => {
     const { dishId } = req.params;
 
     // Use findById() to get the dish based on given id
-    const foundDish = await Dish.findById(dishId);
+    const foundDish = await Dish.findById(dishId).populate([
+      "categories",
+      "restaurant",
+    ]);
 
     return res.status(200).json(foundDish);
   } catch (error) {
