@@ -2,8 +2,6 @@ const express = require("express");
 const Dish = require("../models/Dish");
 const router = express.Router();
 
-//TODO: Create a route to find dishes based on their categories
-
 // Create a middleware for posting a dish
 const postDishMiddleware = (req, res, next) => {
   const dishName = req.body.name; // Assuming JSON request body
@@ -26,6 +24,8 @@ router.get("/", async (req, res) => {
   }
 });
 
+// POST method to find dishes based on their categories
+// NOTE: This is a POST method because we need to provide an array of categories in order to get data.
 router.post("/category", async (req, res) => {
   try {
     const { categoryIds } = req.body;
