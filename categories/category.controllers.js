@@ -1,14 +1,14 @@
 const Category = require("../models/Category");
 
-const getAllCategories = async (req, res) => {
+const getAllCategories = async (req, res, next) => {
   try {
     const categories = await Category.find();
     return res.status(200).json({ categories });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const getCategory = async (req, res) => {
+const getCategory = async (req, res, next) => {
   try {
     // Destruct the id from the url params
     const { categoryId } = req.params;
@@ -16,12 +16,12 @@ const getCategory = async (req, res) => {
     // Use findById() to get the category based on given id
     const foundCategory = await Category.findById(categoryId);
 
-    return res.status(200).json(foundCategory);
+    return res.status(200).json({ foundCategory });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const createCategory = async (req, res) => {
+const createCategory = async (req, res, next) => {
   try {
     // Create a new category using the create() method
     const newCategory = await Category.create(req.body);
@@ -29,10 +29,10 @@ const createCategory = async (req, res) => {
     // Send a response with the newly created category
     res.status(201).json(newCategory);
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const deleteCategory = async (req, res) => {
+const deleteCategory = async (req, res, next) => {
   try {
     const { categoryId } = req.params;
 
@@ -48,10 +48,10 @@ const deleteCategory = async (req, res) => {
       return res.status(204).end();
     }
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const updateCategory = async (req, res) => {
+const updateCategory = async (req, res, next) => {
   try {
     const { categoryId } = req.params;
 
@@ -73,10 +73,10 @@ const updateCategory = async (req, res) => {
         message: `Oops, it seems like the category you're looking for is not there`,
       });
     else {
-      return res.status(200).json({ UpdatedCategory: foundCategory });
+      return res.status(201).json({ UpdatedCategory: foundCategory });
     }
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
 

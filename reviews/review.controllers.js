@@ -1,13 +1,27 @@
 const Review = require("../models/Review");
+const Restaurant = require("../models/Restaurant");
 
 const getAllReviews = async (req, res) => {
   try {
     const reviews = await Review.find();
-    return res.status(200).json({ reviews: reviews });
+    return res.status(200).json({ reviews });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
 };
+
+const getAllReviewByRestaurant = async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+    const restaurant = await Restaurant.find({
+      restaurant: restaurantId,
+    }).populate("restaurant");
+    return res.status(200).json({ reviews });
+  } catch (error) {
+    res.status(500).json({ message: `Internal Server Error: ${error}` });
+  }
+};
+
 const getReview = async (req, res) => {
   try {
     // Destruct the id from the url params
@@ -86,4 +100,5 @@ module.exports = {
   createReview,
   deleteReview,
   updateReview,
+  getAllReviewByRestaurant,
 };

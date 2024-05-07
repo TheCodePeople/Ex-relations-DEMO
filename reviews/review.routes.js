@@ -5,11 +5,15 @@ const {
   createReview,
   deleteReview,
   updateReview,
+  getAllReviewByRestaurant,
 } = require("./review.controllers");
 const router = express.Router();
 
 // GET all reviews
 router.get("/", getAllReviews);
+
+// GET all reviews
+router.get("/restaurant/:restaurantId", getAllReviewByRestaurant);
 
 // GET one review by review id
 router.get("/:reviewId", getReview);

@@ -1,6 +1,6 @@
 const MembershipCard = require("../models/MembershipCard");
 
-const getAllMembershipCards = async (req, res) => {
+const getAllMembershipCards = async (req, res, next) => {
   try {
     const membershipCards = await MembershipCard.find().populate([
       "customer",
@@ -8,44 +8,40 @@ const getAllMembershipCards = async (req, res) => {
     ]);
     return res.status(200).json({ membershipCards });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const getMembershipCard = async (req, res) => {
-  try {
-    // Destruct the id from the url params
-    const { membershipCardId } = req.params;
 
-    // Use findById() to get the membershipCard based on given id
+const getMembershipCard = async (req, res, next) => {
+  try {
+    const { membershipCardId } = req.params;
 
     const foundMembershipCard = await MembershipCard.findById(membershipCardId);
 
-    return res.status(200).json(foundMembershipCard);
+    return res.status(200).json({ foundMembershipCard });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const createMembershipCard = async (req, res) => {
+
+const createMembershipCard = async (req, res, next) => {
   try {
-    // Create a new membershipCard using the create() method
     const newMembershipCard = await MembershipCard.create(req.body);
 
-    // Send a response with the newly created membershipCard
-    res.status(201).json(newMembershipCard);
+    res.status(201).json({ newMembershipCard });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const deleteMembershipCard = async (req, res) => {
+
+const deleteMembershipCard = async (req, res, next) => {
   try {
     const { membershipCardId } = req.params;
 
-    // use the .findByIdAndDelete() method to search for the membershipCard that its id matches the given id and then delete it
     const foundMembershipCard = await MembershipCard.findByIdAndDelete(
       membershipCardId
     );
 
-    // Set a condition to check whether the membershipCard exists or not
     if (!foundMembershipCard)
       return res.status(400).json({
         message: `Oops, it seems like the membershipCard you're looking for is not there`,
@@ -54,17 +50,16 @@ const deleteMembershipCard = async (req, res) => {
       return res.status(204).end();
     }
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const updateMembershipCard = async (req, res) => {
+
+const updateMembershipCard = async (req, res, next) => {
   try {
     const { membershipCardId } = req.params;
 
-    // the changes you wanna make on the membershipCard
     const updatedMembershipCardData = req.body;
 
-    // use the .findByIdAndUpdate() method to search for the membershipCard that its id matches the given id and then update it
     const foundMembershipCard = await MembershipCard.findByIdAndUpdate(
       membershipCardId,
       updatedMembershipCardData,
@@ -73,7 +68,6 @@ const updateMembershipCard = async (req, res) => {
       }
     );
 
-    // Set a condition to check whether the membershipCard exists or not
     if (!foundMembershipCard)
       return res.status(400).json({
         message: `Oops, it seems like the membershipCard you're looking for is not there`,
@@ -84,7 +78,7 @@ const updateMembershipCard = async (req, res) => {
         .json({ UpdatedMembershipCard: foundMembershipCard });
     }
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
 

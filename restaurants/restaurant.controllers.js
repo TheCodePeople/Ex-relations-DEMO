@@ -1,12 +1,14 @@
-const getAllRestaurants = async (req, res) => {
+const Restaurant = require("../models/Restaurant");
+
+const getAllRestaurants = async (req, res, next) => {
   try {
     const restaurants = await Restaurant.find();
     return res.status(200).json({ restaurants }); // Return the Italian restaurants as JSON
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const getRestaurant = async (req, res) => {
+const getRestaurant = async (req, res, next) => {
   try {
     // Destruct the id from the url params
     const { restaurantId } = req.params;
@@ -14,23 +16,23 @@ const getRestaurant = async (req, res) => {
     // Use findById() to get the restaurant based on given id
     const foundRestaurant = await Restaurant.findById(restaurantId);
 
-    return res.status(200).json(foundRestaurant);
+    return res.status(200).json({ foundRestaurant });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const createRestaurant = async (req, res) => {
+const createRestaurant = async (req, res, next) => {
   try {
     // Create a new restaurant using the create() method
     const newRestaurant = await Restaurant.create(req.body);
 
     // Send a response with the newly created restaurant
-    res.status(201).json(newRestaurant);
+    res.status(201).json({ newRestaurant });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const deleteRestaurant = async (req, res) => {
+const deleteRestaurant = async (req, res, next) => {
   try {
     const { restaurantId } = req.params;
 
@@ -46,10 +48,10 @@ const deleteRestaurant = async (req, res) => {
       return res.status(204).end();
     }
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
-const updateRestaurant = async (req, res) => {
+const updateRestaurant = async (req, res, next) => {
   try {
     const { restaurantId } = req.params;
 
@@ -74,7 +76,7 @@ const updateRestaurant = async (req, res) => {
       return res.status(200).json({ UpdatedRestaurant: foundRestaurant });
     }
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
 

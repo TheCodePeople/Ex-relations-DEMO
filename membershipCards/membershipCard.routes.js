@@ -5,7 +5,7 @@ const {
   createMembershipCard,
   deleteMembershipCard,
   updateMembershipCard,
-} = require("./memebershipCard.controllers");
+} = require("./membershipCard.controllers");
 const router = express.Router();
 
 //  GET all membershipCards
