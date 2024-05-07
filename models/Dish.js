@@ -8,13 +8,11 @@ const dishSchema = new Schema({
   restaurant: {
     type: Schema.Types.ObjectId,
     ref: "Restaurant",
-    unique: true,
   },
   categories: [
     {
       type: Schema.Types.ObjectId,
       ref: "Category",
-      unique: true,
     },
   ],
 });

@@ -16,12 +16,10 @@ const ReviewSchema = new Schema({
   customer: {
     type: Schema.Types.ObjectId,
     ref: "Customer",
-    unique: true,
   },
   restaurant: {
     type: Schema.Types.ObjectId,
     ref: "Restaurant",
-    unique: true,
   },
 });
 
