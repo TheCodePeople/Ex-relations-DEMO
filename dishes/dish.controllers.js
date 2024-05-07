@@ -12,6 +12,9 @@ const getAllDishes = async (req, res) => {
 };
 
 const getDishesByCategories = async (req, res) => {
+  // POST method to find dishes based on their categories
+  // NOTE: This is a POST method because we need to provide an array of categories in order to get data.
+
   try {
     const { categoryIds } = req.body;
     const dishes = await Dish.find()
