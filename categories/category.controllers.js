@@ -36,17 +36,28 @@ const deleteCategory = async (req, res, next) => {
   try {
     const { categoryId } = req.params;
 
-    // use the .findByIdAndDelete() method to search for the category that its id matches the given id and then delete it
     const foundCategory = await Category.findByIdAndDelete(categoryId);
 
-    // Set a condition to check whether the category exists or not
-    if (!foundCategory)
+    if (!foundCategory) {
       return res.status(400).json({
         message: `Oops, it seems like the category you're looking for is not there`,
       });
-    else {
-      return res.status(204).end();
     }
+
+    // Delete the category from the dishes if it is used in one of them.
+    await Dish.updateMany(
+      {
+        categories: categoryId,
+      },
+      {
+        $pull: {
+          // use pull to remove an item from the categories array based on their id.
+          categories: categoryId,
+        },
+      }
+    );
+
+    return res.status(204).end();
   } catch (error) {
     next(error);
   }
@@ -67,19 +78,17 @@ const updateCategory = async (req, res, next) => {
       }
     );
 
-    // Set a condition to check whether the category exists or not
-    if (!foundCategory)
+    if (!foundCategory) {
       return res.status(400).json({
         message: `Oops, it seems like the category you're looking for is not there`,
       });
-    else {
-      return res.status(201).json({ UpdatedCategory: foundCategory });
     }
+
+    return res.status(200).json({ UpdatedCategory: foundCategory });
   } catch (error) {
     next(error);
   }
 };
-
 module.exports = {
   getAllCategories,
   getCategory,
