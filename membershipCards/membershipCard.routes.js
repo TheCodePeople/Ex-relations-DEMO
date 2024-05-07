@@ -5,7 +5,10 @@ const router = express.Router();
 //  GET all membershipCards
 router.get("/", async (req, res) => {
   try {
-    const membershipCards = await MembershipCard.find();
+    const membershipCards = await MembershipCard.find().populate([
+      "customer",
+      "restaurant",
+    ]);
     return res.status(200).json({ membershipCards });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
