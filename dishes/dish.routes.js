@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const {
   getAllDishes,
   getDishesByCategories,
@@ -7,7 +8,7 @@ const {
   deleteDish,
   updateDish,
 } = require("./dish.controllers");
-const router = express.Router();
+const fileUpload = require("../middlewares/fileUpload");
 
 //TODO: Create a route to find dishes based on their categories
 
@@ -20,7 +21,7 @@ router.post("/category", getDishesByCategories);
 router.get("/:dishId", getDish);
 
 // POST a dish
-router.post("/", createDish);
+router.post("/", fileUpload.single("image"), createDish);
 
 // DELETE a dish
 router.delete("/:dishId", deleteDish);
