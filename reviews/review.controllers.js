@@ -1,19 +1,14 @@
-const express = require("express");
 const Review = require("../models/Review");
-const router = express.Router();
 
-// GET all reviews
-router.get("/", async (req, res) => {
+const getAllReviews = async (req, res) => {
   try {
     const reviews = await Review.find();
     return res.status(200).json({ reviews: reviews });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-// GET one review by review id
-router.get("/:reviewId", async (req, res) => {
+};
+const getReview = async (req, res) => {
   try {
     // Destruct the id from the url params
     const { reviewId } = req.params;
@@ -25,10 +20,8 @@ router.get("/:reviewId", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-// POST a review
-router.post("/", async (req, res) => {
+};
+const createReview = async (req, res) => {
   try {
     // Create a new review using the create() method
     const newReview = await Review.create(req.body);
@@ -38,10 +31,8 @@ router.post("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-// DELETE a review
-router.delete("/:reviewId", async (req, res) => {
+};
+const deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
 
@@ -59,10 +50,8 @@ router.delete("/:reviewId", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-// Update a review
-router.put("/:reviewId", async (req, res) => {
+};
+const updateReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
 
@@ -89,6 +78,12 @@ router.put("/:reviewId", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
+};
 
-module.exports = router;
+module.exports = {
+  getAllReviews,
+  getReview,
+  createReview,
+  deleteReview,
+  updateReview,
+};

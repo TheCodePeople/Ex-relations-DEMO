@@ -6,12 +6,12 @@ const connectDB = require("./database");
 const errorHandling = require("./middlewares/errorHandling");
 
 // Routes
-const dishRoutes = require("./dishes/dishes.routes");
-const reviewRoutes = require("./reviews/reviews.routes");
+const dishRoutes = require("./dishes/dish.routes");
+const reviewRoutes = require("./reviews/review.routes");
 const customerRoutes = require("./customers/customer.routes");
 const categoryRoutes = require("./categories/category.routes");
 const membershipCardRoutes = require("./membershipCards/membershipCard.routes");
-const restaurantRoutes = require("./restaurants/restaurants.routes");
+const restaurantRoutes = require("./restaurants/restaurant.routes");
 const notFoundError = require("./middlewares/notFoundError");
 
 const app = express();

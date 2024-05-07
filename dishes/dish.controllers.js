@@ -1,21 +1,6 @@
-const express = require("express");
 const Dish = require("../models/Dish");
-const router = express.Router();
 
-//TODO: Create a route to find dishes based on their categories
-
-// Create a middleware for posting a dish
-const postDishMiddleware = (req, res, next) => {
-  const dishName = req.body.name; // Assuming JSON request body
-  if (dishName !== "name") {
-    next(); // Allow the request to proceed
-  } else {
-    res.status(400).send("Invalid dish name. 'name' is not allowed.");
-  }
-};
-
-//  GET all dishes
-router.get("/", async (req, res) => {
+const getAllDishes = async (req, res) => {
   try {
     const dishes = await Dish.find()
       .populate("categories", "name")
@@ -24,9 +9,8 @@ router.get("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-router.post("/category", async (req, res) => {
+};
+const getDishesByCategories = async (req, res) => {
   try {
     const { categoryIds } = req.body;
     const dishes = await Dish.find()
@@ -38,10 +22,8 @@ router.post("/category", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-// GET one dish based on dish id
-router.get("/:dishId", async (req, res) => {
+};
+const getDish = async (req, res) => {
   try {
     // Destruct the id from the url params
     const { dishId } = req.params;
@@ -56,10 +38,8 @@ router.get("/:dishId", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-// POST a dish
-router.post("/", postDishMiddleware, async (req, res) => {
+};
+const createDish = async (req, res) => {
   try {
     // Create a new dish using the create() method
     const newDish = await Dish.create(req.body);
@@ -69,10 +49,8 @@ router.post("/", postDishMiddleware, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-// DELETE a dish
-router.delete("/:dishId", async (req, res) => {
+};
+const deleteDish = async (req, res) => {
   try {
     const { dishId } = req.params;
 
@@ -90,10 +68,8 @@ router.delete("/:dishId", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-// Update (PUT) a dish
-router.put("/:dishId", async (req, res) => {
+};
+const updateDish = async (req, res) => {
   try {
     const { dishId } = req.params;
 
@@ -116,6 +92,12 @@ router.put("/:dishId", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error}` });
   }
-});
-
-module.exports = router;
+};
+module.exports = {
+  getAllDishes,
+  getDishesByCategories,
+  getDish,
+  createDish,
+  deleteDish,
+  updateDish,
+};
