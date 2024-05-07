@@ -18,7 +18,6 @@ const membershipSchema = new Schema({
   restaurant: {
     type: Schema.Types.ObjectId,
     ref: "Restaurant",
-    unique: true,
   },
 });
 

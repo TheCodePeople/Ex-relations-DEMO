@@ -1,4 +1,5 @@
 const Category = require("../models/Category");
+const Dish = require("../models/Dish");
 
 const getAllCategories = async (req, res, next) => {
   try {
@@ -10,10 +11,8 @@ const getAllCategories = async (req, res, next) => {
 };
 const getCategory = async (req, res, next) => {
   try {
-    // Destruct the id from the url params
     const { categoryId } = req.params;
 
-    // Use findById() to get the category based on given id
     const foundCategory = await Category.findById(categoryId);
 
     return res.status(200).json({ foundCategory });
@@ -23,10 +22,8 @@ const getCategory = async (req, res, next) => {
 };
 const createCategory = async (req, res, next) => {
   try {
-    // Create a new category using the create() method
     const newCategory = await Category.create(req.body);
 
-    // Send a response with the newly created category
     res.status(201).json(newCategory);
   } catch (error) {
     next(error);

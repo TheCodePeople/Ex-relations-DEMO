@@ -13,7 +13,7 @@ const router = express.Router();
 router.get("/", getAllReviews);
 
 // GET all reviews
-router.get("/restaurant/:restaurantId", getAllReviewByRestaurant);
+router.get("/restaurant/:id", getAllReviewByRestaurant);
 
 // GET one review by review id
 router.get("/:reviewId", getReview);

@@ -1,17 +1,17 @@
 const Dish = require("../models/Dish");
 
-const getAllDishes = async (req, res) => {
+const getAllDishes = async (req, res, next) => {
   try {
     const dishes = await Dish.find()
       .populate("categories", "name")
       .populate("restaurant", "name");
     return res.status(200).json({ dishes });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
 
-const getDishesByCategories = async (req, res) => {
+const getDishesByCategories = async (req, res, next) => {
   // POST method to find dishes based on their categories
   // NOTE: This is a POST method because we need to provide an array of categories in order to get data.
 
@@ -24,11 +24,11 @@ const getDishesByCategories = async (req, res) => {
 
     return res.status(200).json({ dishes });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
 
-const getDish = async (req, res) => {
+const getDish = async (req, res, next) => {
   try {
     const { dishId } = req.params;
 
@@ -39,21 +39,21 @@ const getDish = async (req, res) => {
 
     return res.status(200).json({ foundDish });
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
 
-const createDish = async (req, res) => {
+const createDish = async (req, res, next) => {
   try {
     const newDish = await Dish.create(req.body);
 
     res.status(201).json(newDish);
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
 
-const deleteDish = async (req, res) => {
+const deleteDish = async (req, res, next) => {
   try {
     const { dishId } = req.params;
 
@@ -67,11 +67,11 @@ const deleteDish = async (req, res) => {
       return res.status(204).end();
     }
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
 
-const updateDish = async (req, res) => {
+const updateDish = async (req, res, next) => {
   try {
     const { dishId } = req.params;
 
@@ -89,7 +89,7 @@ const updateDish = async (req, res) => {
       return res.status(200).json({ UpdatedDish: foundDish });
     }
   } catch (error) {
-    res.status(500).json({ message: `Internal Server Error: ${error}` });
+    next(error);
   }
 };
 module.exports = {
