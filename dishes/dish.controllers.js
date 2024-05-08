@@ -81,9 +81,9 @@ const deleteDish = async (req, res, next) => {
 
     // Delete dish image:
     // check if the dish has an image.
-    if (foundDish.value.image) {
+    if (foundDish.image) {
       // get the image name without the directory prefix
-      const imageName = foundDish.value.image.replace(/^images\//, "");
+      const imageName = foundDish.image.replace(/^images\//, "");
 
       // get the static path where the image is stored
       const staticPath = path.join(path.dirname(""), "static/images");
@@ -94,7 +94,7 @@ const deleteDish = async (req, res, next) => {
       // check if the image exists
       if (fs.existsSync(imagePath)) {
         // delete the image using fs.unlink
-        fs.unlink(filePath, (err) => {
+        fs.unlink(imagePath, (err) => {
           if (err) {
             return res.status(500).json({ error: "Error deleting dish image" });
           }
